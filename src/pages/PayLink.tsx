@@ -33,6 +33,20 @@ const PayLink = () => {
     const path = window.location.pathname;
     const id = path.split("/").pop();
     setLinkId(id || null);
+    
+    // Check URL params first (for shareable links)
+    const params = new URLSearchParams(window.location.search);
+    const urlAmount = params.get('amount');
+    const urlToken = params.get('token');
+    
+    if (urlAmount && urlToken) {
+      // Payment data embedded in URL - works across users!
+      console.log('✅ Payment data from URL:', { amount: urlAmount, token: urlToken });
+      setPaymentData({ amount: urlAmount, token: urlToken });
+      return;
+    }
+    
+    // Fallback to localStorage or backend
     (async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL || '';
@@ -72,7 +86,8 @@ const PayLink = () => {
         }
         setPaymentData({ amount: d.amountType === 'any' ? undefined : d.amount, token: d.token });
       } else {
-        setError('Payment link not found');
+        // Link not found in localStorage (user doesn't have it)
+        setError('⚠️ Demo Mode Limitation: Links are stored in browser localStorage. Each user needs to create their own links. For production, use backend database for real link sharing.');
       }
     })();
   }, []);

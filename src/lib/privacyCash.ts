@@ -49,7 +49,13 @@ export async function createPrivateLink(opts: {
   expiresIn?: number; // milliseconds, optional
 }): Promise<PaymentLink> {
   const linkId = Math.random().toString(36).slice(2, 9);
-  const url = `${window.location.origin}/pay/${linkId}`;
+  
+  // Embed payment data in URL for cross-user sharing
+  const params = new URLSearchParams();
+  if (opts.amount) params.set('amount', opts.amount);
+  if (opts.token) params.set('token', opts.token);
+  const queryString = params.toString();
+  const url = `${window.location.origin}/pay/${linkId}${queryString ? '?' + queryString : ''}`;
 
   const link: PaymentLink = {
     linkId,

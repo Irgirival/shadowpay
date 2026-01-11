@@ -28,9 +28,9 @@ const Header = () => {
             <img 
               src="/shadow.png" 
               alt="ShadowPay" 
-              className="w-9 h-9 object-contain transition-transform group-hover:scale-105" 
+              className="w-12 h-12 object-contain transition-transform group-hover:scale-105" 
             />
-            <span className="font-semibold text-lg text-foreground hidden sm:block">
+            <span className="font-semibold text-xl text-foreground hidden sm:block">
               ShadowPay
             </span>
           </Link>
