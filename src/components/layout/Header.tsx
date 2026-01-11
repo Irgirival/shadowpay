@@ -26,7 +26,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center group">
             <img 
-              src="/pay1.jpg" 
+              src="/pay.png" 
               alt="ShadowPay" 
               className="h-14 w-auto object-contain transition-transform group-hover:scale-105" 
             />
