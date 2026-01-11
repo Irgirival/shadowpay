@@ -392,11 +392,6 @@ const Withdraw = () => {
                         <p className="text-muted-foreground">
                           Funds sent privately to your destination wallet
                         </p>
-                        <div className="mt-4 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-                          <p className="text-xs text-yellow-700">
-                            💡 <strong>Demo Mode:</strong> This is a simulated withdrawal. For real transactions on mainnet, backend integration is required.
-                          </p>
-                        </div>
                       </div>
 
                       {txHash && (
@@ -408,7 +403,7 @@ const Withdraw = () => {
                             </code>
                           </div>
                           <a
-                            href={getSolscanUrl(txHash)}
+                            href={`https://explorer.solana.com/tx/${txHash}?cluster=devnet`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 text-primary hover:underline text-sm font-medium"
