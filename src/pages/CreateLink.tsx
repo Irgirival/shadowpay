@@ -1,0 +1,261 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Lock, Copy, Share2, Check, ChevronDown, Shield, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+
+const CreateLink = () => {
+  const [amount, setAmount] = useState("");
+  const [isAnyAmount, setIsAnyAmount] = useState(false);
+  const [linkCreated, setLinkCreated] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const generatedLink = "https://pay.privacycash.io/p/3xK9mNq";
+
+  const handleCreateLink = () => {
+    setLinkCreated(true);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(generatedLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleReset = () => {
+    setLinkCreated(false);
+    setAmount("");
+    setIsAnyAmount(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="pt-24 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-xl mx-auto">
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-8"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-6 shadow-glow">
+                <Lock className="w-7 h-7 text-primary-foreground" />
+              </div>
+              <h1 className="text-3xl font-bold text-foreground mb-3">
+                Create Private Payment Link
+              </h1>
+              <p className="text-muted-foreground">
+                Generate a link to receive payments without revealing your wallet
+              </p>
+            </motion.div>
+
+            {/* Form Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-card border border-border/50 rounded-2xl shadow-soft p-6 sm:p-8"
+            >
+              <AnimatePresence mode="wait">
+                {!linkCreated ? (
+                  <motion.div
+                    key="form"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-6"
+                  >
+                    {/* Wallet Status */}
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/20">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                          <Shield className="w-5 h-5 text-primary-foreground" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">Wallet Connected</p>
+                          <p className="text-xs text-muted-foreground">8xK9...mN3q</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 rounded-md bg-green-500/10 text-green-600 text-xs font-medium">
+                        Connected
+                      </span>
+                    </div>
+
+                    {/* Amount Input */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="amount" className="text-foreground">
+                          Amount
+                        </Label>
+                        <button
+                          onClick={() => setIsAnyAmount(!isAnyAmount)}
+                          className="text-xs text-primary hover:underline"
+                        >
+                          {isAnyAmount ? "Set fixed amount" : "Allow any amount"}
+                        </button>
+                      </div>
+                      
+                      {!isAnyAmount ? (
+                        <div className="relative">
+                          <Input
+                            id="amount"
+                            type="number"
+                            placeholder="0.00"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            className="h-14 text-2xl font-semibold pr-20 bg-background"
+                          />
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted">
+                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                              <span className="text-[10px] font-bold text-white">$</span>
+                            </div>
+                            <span className="text-sm font-medium text-foreground">USDC</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="h-14 flex items-center justify-center rounded-xl border border-dashed border-primary/30 bg-primary/5">
+                          <span className="text-muted-foreground">Sender chooses amount</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Token Selector */}
+                    <div className="space-y-3">
+                      <Label className="text-foreground">Token</Label>
+                      <button className="w-full h-12 flex items-center justify-between px-4 rounded-xl border border-border bg-background hover:bg-muted/50 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                            <span className="text-xs font-bold text-white">$</span>
+                          </div>
+                          <span className="font-medium text-foreground">USDC</span>
+                        </div>
+                        <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                      </button>
+                    </div>
+
+                    {/* Privacy Level */}
+                    <div className="p-4 rounded-xl bg-muted/50 border border-border/50">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Lock className="w-5 h-5 text-primary" />
+                          <span className="font-medium text-foreground">Privacy Level</span>
+                        </div>
+                        <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium flex items-center gap-1">
+                          <Lock className="w-3 h-3" />
+                          Maximum
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Payment routed through Privacy Cash pool. No on-chain link between sender and receiver.
+                      </p>
+                    </div>
+
+                    {/* Create Button */}
+                    <Button
+                      variant="hero"
+                      size="xl"
+                      className="w-full"
+                      onClick={handleCreateLink}
+                      disabled={!isAnyAmount && !amount}
+                    >
+                      <Lock className="w-5 h-5" />
+                      Create Private Payment Link
+                    </Button>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-6"
+                  >
+                    {/* Success Icon */}
+                    <div className="text-center">
+                      <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+                        <Check className="w-8 h-8 text-green-500" />
+                      </div>
+                      <h2 className="text-xl font-semibold text-foreground mb-2">
+                        Link Created!
+                      </h2>
+                      <p className="text-muted-foreground">
+                        Share this link to receive private payments
+                      </p>
+                    </div>
+
+                    {/* Link Display */}
+                    <div className="p-4 rounded-xl bg-muted/50 border border-border">
+                      <p className="text-sm text-muted-foreground mb-2">Your payment link</p>
+                      <div className="flex items-center gap-2">
+                        <code className="flex-1 text-foreground font-mono text-sm bg-background px-3 py-2 rounded-lg overflow-hidden text-ellipsis">
+                          {generatedLink}
+                        </code>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={handleCopy}
+                          className="shrink-0"
+                        >
+                          {copied ? (
+                            <Check className="w-4 h-4 text-green-500" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Amount Display */}
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50 border border-border">
+                      <span className="text-muted-foreground">Amount</span>
+                      <span className="font-semibold text-foreground">
+                        {isAnyAmount ? "Any amount" : `${amount} USDC`}
+                      </span>
+                    </div>
+
+                    {/* Privacy Badges */}
+                    <div className="flex flex-wrap gap-3">
+                      <span className="px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium flex items-center gap-1.5">
+                        <Lock className="w-3 h-3" />
+                        Wallet Hidden
+                      </span>
+                      <span className="px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 text-sm font-medium flex items-center gap-1.5">
+                        <Shield className="w-3 h-3" />
+                        Maximum Privacy
+                      </span>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-3">
+                      <Button variant="outline" className="flex-1" onClick={handleCopy}>
+                        <Copy className="w-4 h-4" />
+                        {copied ? "Copied!" : "Copy Link"}
+                      </Button>
+                      <Button variant="outline" className="flex-1">
+                        <Share2 className="w-4 h-4" />
+                        Share
+                      </Button>
+                    </div>
+
+                    <Button variant="ghost" className="w-full" onClick={handleReset}>
+                      Create another link
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default CreateLink;
