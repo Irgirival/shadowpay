@@ -133,9 +133,8 @@ const CreateLink = () => {
               <Alert className="border-blue-500/30 bg-blue-500/5">
                 <Info className="h-4 w-4 text-blue-600" />
                 <AlertDescription className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">Devnet Demo:</span> Currently only SOL payments are supported. 
-                  Payments are routed through Privacy Cash contracts for enhanced privacy. 
-                  Links are payment requests, not bearer tokens.
+                  <span className="font-medium text-foreground">Privacy-First Payments:</span> Create payment links that work like
+                  payment requests. Funds are routed through Privacy Cash contracts. Multi-token and cross-chain support coming soon.
                 </AlertDescription>
               </Alert>
             </motion.div>
@@ -269,12 +268,33 @@ const CreateLink = () => {
                             onChange={(e) => setToken(e.target.value)}
                             className="bg-transparent outline-none font-medium"
                           >
-                            <option value="USDC">USDC</option>
-                            <option value="USDT">USDT</option>
                             <option value="SOL">SOL</option>
+                            <option value="USDC" disabled>USDC (Coming Soon)</option>
+                            <option value="USDT" disabled>USDT (Coming Soon)</option>
                           </select>
                         </div>
                         <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                      </div>
+                      
+                      {/* Token Roadmap Badges */}
+                      <div className="flex gap-2 flex-wrap items-center">
+                        <span className="text-xs text-muted-foreground">Supported:</span>
+                        <span className="px-2.5 py-1 rounded-full bg-green-500/10 text-green-600 text-xs font-medium flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+                          SOL
+                        </span>
+                        <span className="px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-xs flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40"></span>
+                          USDC (Q1 2026)
+                        </span>
+                        <span className="px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-xs flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40"></span>
+                          USDT (Q1 2026)
+                        </span>
+                        <span className="px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-xs flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40"></span>
+                          Base (Roadmap)
+                        </span>
                       </div>
                     </div>
 
