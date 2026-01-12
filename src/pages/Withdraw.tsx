@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { getUserBalance } from "@/lib/supabasePayment";
+import { fetchPrivateBalance, withdrawFromBackend } from "@/lib/api";
 import { useWallet } from "@/hooks/use-wallet";
 import {
   analyzeWithdrawalPrivacy,
@@ -60,7 +60,7 @@ const Withdraw = () => {
         return;
       }
       try {
-        const bal = await getUserBalance(publicKey);
+        const bal = await fetchPrivateBalance(publicKey);
         setBalance(bal);
       } catch (err) {
         console.error("Failed to load balance:", err);
@@ -134,7 +134,7 @@ const Withdraw = () => {
               
               // Update balance
               if (publicKey) {
-                const newBalance = await getUserBalance(publicKey);
+                const newBalance = await fetchPrivateBalance(publicKey);
                 setBalance(newBalance);
               }
               setWithdrawing(false);
@@ -146,14 +146,24 @@ const Withdraw = () => {
         }
       }
       
-      // Fallback: Local withdrawal (demo mode)
-      // Simulasikan withdraw sukses (karena withdrawFromPrivacyPool tidak ada)
-      setSuccess(true);
-      setWithdrawAmount("");
-      setRecipientAddress("");
+      // Fallback: Local withdrawal (demo mode) diganti ke backend
       if (publicKey) {
-        const newBalance = await getUserBalance(publicKey);
-        setBalance(newBalance);
+        const result = await withdrawFromBackend({
+          user_id: publicKey,
+          amount: parseFloat(withdrawAmount),
+          token: token as string,
+          recipient: recipientAddress,
+        });
+        if (result.success) {
+          setTxHash(result.txHash || null);
+          setSuccess(true);
+          setWithdrawAmount("");
+          setRecipientAddress("");
+          const newBalance = await fetchPrivateBalance(publicKey);
+          setBalance(newBalance);
+        } else {
+          setError(result.error || "Withdrawal failed");
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
