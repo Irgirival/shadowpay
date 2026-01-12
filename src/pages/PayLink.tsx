@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { getLinkDetails, payLink, depositToPrivacyPool } from "@/lib/privacyCash";
+import { getLinkDetails, payLink } from "@/lib/privacyCash";
 import { useWallet } from "@/hooks/use-wallet";
 import { 
   Connection, 
