@@ -11,6 +11,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { createPrivateLink } from "@/lib/privacyCash";
 import type { AmountType, LinkUsageType } from "@/lib/types";
+import { useWallet } from "@/hooks/use-wallet";
 
 const CreateLink = () => {
   const [amount, setAmount] = useState("");
@@ -22,6 +23,7 @@ const CreateLink = () => {
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [token, setToken] = useState("SOL"); // Changed from USDC to SOL for devnet
   const [expiryHours, setExpiryHours] = useState<string>("");
+  const { publicKey } = useWallet();
 
   const handleCreateLink = async () => {
     // Validate amount for fixed type
@@ -67,6 +69,7 @@ const CreateLink = () => {
         token,
         amountType,
         linkUsageType,
+        creator_id: publicKey || "", // fallback to empty string if not connected
       });
       
       // Expiry handled by backend
