@@ -33,7 +33,7 @@ import {
 import { Link } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { getPrivateBalance, getAllLinks } from "@/lib/privacyCash";
+import { fetchDashboardData } from "@/lib/api";
 import type { PaymentLink } from "@/lib/types";
 
 type FilterStatus = 'all' | 'active' | 'paid' | 'expired';
@@ -51,45 +51,39 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
 
-  // Fetch balance on mount
+  // Fetch dashboard data (balance & links) on mount
   useEffect(() => {
-    fetchBalance();
-    fetchLinks();
+    async function loadDashboard() {
+      try {
+        setBalanceLoading(true);
+        setLinksLoading(true);
+        const { balance, links } = await fetchDashboardData();
+        setPrivateBalance(balance);
+        setLinks(links);
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+        setPrivateBalance(0);
+        setLinks([]);
+      } finally {
+        setBalanceLoading(false);
+        setLinksLoading(false);
+      }
+    }
+    loadDashboard();
   }, []);
-
-  const fetchBalance = async () => {
-    try {
-      setBalanceLoading(true);
-      const balance = await getPrivateBalance();
-      setPrivateBalance(balance);
-    } catch (error) {
-      console.error('Failed to fetch balance:', error);
-      setPrivateBalance(0);
-    } finally {
-      setBalanceLoading(false);
-    }
-  };
-
-  const fetchLinks = async () => {
-    try {
-      setLinksLoading(true);
-      const allLinks = await getAllLinks();
-      setLinks(allLinks);
-    } catch (error) {
-      console.error('Failed to fetch links:', error);
-      setLinks([]);
-    } finally {
-      setLinksLoading(false);
-    }
-  };
 
   const handleRefreshBalance = async () => {
     setRefreshing(true);
-    await fetchBalance();
-    await fetchLinks(); // Also refresh links
-    toast.success('Balance Updated', {
-      description: 'Your private balance has been refreshed',
-    });
+    try {
+      const { balance, links } = await fetchDashboardData();
+      setPrivateBalance(balance);
+      setLinks(links);
+      toast.success('Balance Updated', {
+        description: 'Your private balance has been refreshed',
+      });
+    } catch (error) {
+      toast.error('Failed to refresh dashboard data');
+    }
     setRefreshing(false);
   };
 
